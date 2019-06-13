@@ -7,6 +7,7 @@ export default class MainLayout extends Component {
             <div>
                 <Header/>
                 <main>
+                    {this.props.data}
                     {this.props.children}
                 </main>
                 <footer></footer>
