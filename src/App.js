@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
 import routes from './routes';
 
 export default class App extends Component{
@@ -9,7 +9,12 @@ export default class App extends Component{
                 <Switch>
                     {
                         routes.map((route,i) => {
-                            let {component, path, exact} = route;
+                            let {component, path, exact, auth} = route;
+                            if(auth){
+                                return (
+                                    <PrivateRoute key={i} path={path} component={component} exact ={exact}/>
+                                )
+                            }
                             return(
                                 <Route key={i} path= {path} component={component} exact = {exact}/>
                             )
@@ -20,3 +25,23 @@ export default class App extends Component{
         )
     }
 }
+
+function PrivateRoute({ component: Component, ...rest }) {
+    return (
+      <Route
+        {...rest}
+        render={props =>
+          localStorage.isAuthenticated === "true" ? (
+            <Component {...props} />
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: props.location }
+              }}
+            />
+          )
+        }
+      />
+    );
+  }
