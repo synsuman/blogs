@@ -1,57 +1,74 @@
 import React, { Component } from 'react'
 import MainLayout from './Layouts/MainLayout';
 import { Link } from 'react-router-dom';
+import Axios from 'axios';
+import { Button } from 'antd';
+import NotFound from './NotFound'
 
 export default class Detail extends Component {
-    constructor(props){
-        super(props);
-        console.log('constructor');
-        this.state = {
-            home: 'Detail of '+this.props.match.params.id
-        }
-        this.handleClick = this.handleClick.bind(this);
-    }
-    componentWillMount(){
-        console.log('component will mount')
+    state ={
+        blog : {
+            title: '',
+            image: '',
+            desc: ''
+        },
+        error: false
     }
     componentDidMount(){
-        console.log('component did mount')
-    }
-    componentWillUpdate(){
-        console.log('component will update')
-    }
-    componentDidUpdate(){
-        console.log('component did update')
+        Axios.get(`/blogs/${this.props.match.params.id}`)
+        .then(data => {
+            this.setState({
+                blog: data.data
+            })
+        })
+        .catch(error =>{
+            if(error.response.status === 404){
+                this.setState({
+                    error: true
+                })
+            }
+        })
     }
     componentWillReceiveProps(nextProps){
-        this.setState({
-            home: 'Detail of '+nextProps.match.params.id
+        Axios.get(`/blogs/${nextProps.match.params.id}`)
+        .then(data => {
+            this.setState({
+                blog: data.data
+            })
+        }) 
+        .catch(error =>{
+            if(error.response.status === 404){
+                this.setState({
+                    error: true
+                })
+            }
+        }) 
+    }
+    handleDelete = id => {
+        Axios.delete(`/blogs/${id}`)
+        .then(data => {
+            this.props.history.push('/blogs')
         })
-        console.log('component will receive props')
     }
-    componentWillUnmount(){
-        console.log('component will unmount')
-    }
-    componentDidCatch(){
-        console.log('component did catch');
-    }
-    handleClick(){
-        console.log('handle Click')
-        this.setState({
-            home:'Hello Detail of '+this.props.match.params.id
-        })
-    }
-
-    render() {
-        console.log('render');
-        return (
-            <MainLayout data ="hello">
-                <h1>{this.state.home}</h1>
-                <button onClick={this.handleClick}>Change State</button>
-                <Link to="/blogs/1">Link 1</Link>
-                <Link to="/blogs/2">Link 2</Link>
-                <Link to="/blogs/3">Link 3</Link>
-                <Link to="/blogs/4">Link 4</Link>
+    render(){
+        let {title, desc, image} = this.state.blog
+        let prev = this.props.match.params.id - 1;
+        let next = prev + 2;
+        console.log(prev, next)
+        if (this.state.error) return <NotFound/>
+        return(
+            <MainLayout>
+                <h1>{title}</h1>
+                <img src={image} alt={title}/>
+                <p>{desc}</p>
+                <Button type="danger" onClick={ () => this.handleDelete(this.props.match.params.id)}>Delete</Button>
+                <br/>
+                <br/>
+                <p>Similar Blogs</p>
+                <ul>
+                    <li><Link to = {`/blogs/${prev}`}>Link {prev}</Link></li>
+                    <li><Link to = {`/blogs/${next}`}>Link {next}</Link></li>
+                </ul>
             </MainLayout>
         )
     }

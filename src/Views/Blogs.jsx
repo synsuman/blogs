@@ -2,6 +2,7 @@ import { Row, Col, Card } from 'antd';
 import React, { Component } from 'react'
 import MainLayout from './Layouts/MainLayout';
 import Axios from 'axios'
+import {Link} from 'react-router-dom'
 
 const {Meta} = Card
 
@@ -10,13 +11,14 @@ export default class Blogs extends Component {
         blogs: []
     }
     componentDidMount(){
-        Axios.get('https://5d024bd79ce12c0014e0f50b.mockapi.io/api/blogs')
+        Axios.get('/blogs')
         .then((data) => {
-            let latest = data.data.sort((a,b) => {return b.id - a.id});
+            // let latest = data.data.sort((a,b) => {return b.id - a.id});
 
-            let blogs = latest.filter((obj, i) => {
-                return i < 3
-            })
+            // let blogs = latest.filter((obj, i) => {
+            //     return i < 3
+            // })
+            let blogs = data.data;
             this.setState({
                 blogs
             })
@@ -34,15 +36,17 @@ export default class Blogs extends Component {
                         this.state.blogs.map((blog) => {
                             let {id, title, desc, image} = blog;
                             return (
-                                <Col key={id} span={8}>
-                                    <Card
-                                        hoverable
-                                        style={{ width: 240 }}
+                                <Col key={id} span={6}>
+                                    <Link to={`/blogs/${id}`}>
+                                    
+                                        <Card
+                                            hoverable
 
-                                        cover={<img alt={"example"+id} src={image}/>}
-                                    >
-                                        <Meta title={title} description={desc} />
-                                    </Card>
+                                            cover={<img alt={"example"+id} src={image}/>}
+                                        >
+                                            <Meta title={title} description={desc} />
+                                        </Card>
+                                    </Link>
                                 </Col>
 
                             )

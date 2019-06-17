@@ -21,7 +21,7 @@ export default class Login extends Component {
     }
     render() {
         let { from } = this.props.location.state || { from: { pathname: "/" } };
-        let { redirectToReferrer} = this.state
+        let { redirectToReferrer } = this.state
 
         if(redirectToReferrer) return <Redirect to={from}/>
         
