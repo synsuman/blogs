@@ -6,6 +6,8 @@ import Login from './Views/Login'
 import NotFound from './Views/NotFound'
 
 import React from 'react'
+import NewBlog from './Views/NewBlog';
+import EditBlog from './Views/EditBlog';
 
 function dashboard() {
     return (
@@ -47,9 +49,15 @@ const routes = [
         exact: true
     },
     {
-        path:'/admin/properties',
-        component: dashboard,
-        auth: false,
+        path:'/new-blog',
+        component: NewBlog,
+        auth: true,
+        exact: true
+    },
+    {
+        path:'/edit-blog/:id',
+        component: EditBlog,
+        auth: true,
         exact: true
     },
     {

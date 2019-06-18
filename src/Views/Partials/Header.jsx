@@ -29,9 +29,16 @@ export default class Header extends Component {
                                 {
                                     localStorage.isAuthenticated === "true" ? 
                                     <li>
+                                        <Link to="/new-blog">
+                                            <Button type="primary" >
+                                                New Blog
+                                            </Button>
+                                        </Link>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <Button type="danger" onClick={this.handleSignout}>
                                             Signout
                                         </Button>
+
                                     </li> :
                                     <li>
                                         <Link to="/login">

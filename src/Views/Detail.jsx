@@ -61,6 +61,7 @@ export default class Detail extends Component {
                 <h1>{title}</h1>
                 <img src={image} alt={title}/>
                 <p>{desc}</p>
+                <Link to={"/edit-blog/"+this.props.match.params.id}><Button type="primary">Edit Post</Button></Link>
                 <Button type="danger" onClick={ () => this.handleDelete(this.props.match.params.id)}>Delete</Button>
                 <br/>
                 <br/>
